@@ -1,4 +1,6 @@
 const fs = require('fs');
+const { exec } = require("child_process");
+
 var pathPadre = './';
 var pathDefault = './';
 var pathCopia = {'type': -1, 'path': '','nombre':''};
@@ -17,6 +19,7 @@ function existeArchivo(path) {
 
 //Mostrar contenido del directorio actual
 function mostrarContenido() {
+    
     if (existeArchivo(pathDefault)) {
         var dir = fs.opendirSync(pathDefault);
         directorios = [];
@@ -78,7 +81,7 @@ function crearArchivo(nombre) {
     }
 }
 
-//Cambiar nombre
+//Cambiar nombre //Da error si la carpeta tiene algo 
 function cambiarNombre(viejoNombre, nuevoNombre) {
     pathViejo = pathDefault + viejoNombre;
     pathNuevo = pathDefault + nuevoNombre;
@@ -149,7 +152,7 @@ function copiarArchivo(nombreArchivo){
     return { 'id': 0, 'mensaje': `Error al copiar el archivo/carpeta ${nombreArchivo}` };
 }
 
-//Pegar archivo
+//Pegar archivo // Da error de permisos
 
 function pegarArchivo(cut = false){
     if(pathCopia.type != -1){
@@ -169,37 +172,4 @@ function pegarArchivo(cut = false){
         return { 'id': 0, 'mensaje': "No se ha copiado/cortado ningun archivo" };
     }
 }
-
-console.log(mostrarContenido());
-console.log(crearCarpeta('root'));
-console.log(ingresarHijo('root'));
-console.log(crearArchivo('hola'));
-console.log(mostrarContenido());
-console.log(cambiarNombre('hola','chao'));
-console.log(ingresarPadre());
-console.log(crearCarpeta('Pablo'));
-console.log(ingresarHijo('Pablo'));
-console.log(crearCarpeta('Corazon'));
-console.log(ingresarHijo('Corazon'));
-console.log(crearArchivo('Sangre'));
-//console.log(ingresarPadre());
-//console.log(borrarArchivo('Corazon'));
-console.log(borrarArchivo('Sangre'));
-console.log(ingresarPadre());
-console.log(ingresarPadre());
-console.log(ingresarPadre());
-console.log(ingresarPadre());
-console.log(ingresarPadre());
-console.log(ingresarHijo('root'));
-console.log(copiarArchivo('chao'));
-console.log(ingresarPadre());
-console.log(ingresarPadre());
-console.log(ingresarPadre());
-console.log(ingresarHijo('Pablo'));
-console.log(ingresarHijo('Corazon'));
-console.log(pegarArchivo(true));
-console.log(ingresarPadre());
-console.log(copiarArchivo('Corazon'));
-console.log(ingresarPadre());
-console.log(pegarArchivo());
 
