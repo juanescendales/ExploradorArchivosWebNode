@@ -1,9 +1,11 @@
 const fs = require('fs');
-const { exec } = require("child_process");
+const { execSync } = require("child_process");
 
-var pathPadre = './';
-var pathDefault = './';
-var pathCopia = {'type': -1, 'path': '','nombre':''};
+const rootPath = './root/';
+
+var pathPadre = rootPath;
+var pathDefault = rootPath;
+var pathCopia = { 'typePaste': -1, 'path': '', 'name': '' };
 //Existe un archivo
 function existeArchivo(path) {
     try {
@@ -16,24 +18,52 @@ function existeArchivo(path) {
         }
     }
 }
-
-//Mostrar contenido del directorio actual
-function mostrarContenido() {
-    
-    if (existeArchivo(pathDefault)) {
-        var dir = fs.opendirSync(pathDefault);
-        directorios = [];
-        directorio = dir.readSync();
-        while (directorio != null) {
-            directorios.push(directorio);
-            directorio = dir.readSync();
-        }
-
-        return { 'id': 1, 'mensaje': directorios };
-
-    } else {
-        return { 'id': 0, 'mensaje': "Este directorio no existe" };
+//Permisos numericos
+function permisosNumericosYTipo(permisosLetras){
+    var tipo = 1;
+    if(permisosLetras[0] == 'd'){
+        tipo = 0;
     }
+    var contador = 0;
+    var numero = "";
+    var permisos = "";
+    for(var i=1 ; i< permisosLetras.length;i++){
+        if(permisosLetras[i] = 'r' || permisosLetras[i] == 'w' || permisosLetras[i] == 'x'){
+            numero += '1';
+        }else{
+            numero += '0';
+        }
+        contador++;
+        if(contador == 3){
+            permisos += parseInt(parseInt(numero),2).toString();
+            var contador = 0;
+            var numero = "";
+        }
+    }
+    return {'tipo':tipo,'permisos':permisos};
+
+}
+//Mostrar contenido del directorio actual
+function mostrarContenido (){
+    try{
+        var directorios = execSync('ls -l', { cwd: pathDefault }).toString().split("\n");
+        var lista = [];
+        directorios = directorios.slice(1, directorios.length - 1);
+        directorios.map(x => {
+            var directorio = (x.substring(0,10)+x.substring(14)).split(" ");
+            var info = permisosNumericosYTipo(directorio[0].split(''));
+            lista.push({
+                name: directorio[directorio.length - 1],
+                permissions: info.permisos,
+                propietario: directorio[1],
+                tipo: info.tipo
+            });
+        });
+        return { 'id': 1, 'mensaje': lista };
+    }catch(err){
+        return { 'id': 0, 'mensaje': err };
+    }
+    
 }
 
 //Cambiar directorio hijo
@@ -42,17 +72,17 @@ function ingresarHijo(nombre) {
     if (existeArchivo(path)) {
         pathPadre = pathDefault;
         pathDefault = path;
-        return { 'id': 1, 'mensaje': `Ingreso satisfactorio al hijo ${pathDefault} con padre ${pathPadre}`};
+        return { 'id': 1, 'mensaje': `Ingreso satisfactorio al hijo ${pathDefault} con padre ${pathPadre}` };
     } else {
         return { 'id': 0, 'mensaje': `Este directorio ${path} no existe` };
     }
 }
 //Devolverse una carpeta
 function ingresarPadre() {
-    if (pathPadre != './') {
+    if (pathPadre != rootPath) {
         pathDefault = pathPadre
-        pathPadre = pathPadre.substring(0,pathPadre.length-1);
-        pathPadre = pathPadre.substring(0, pathPadre.lastIndexOf('/')+1);
+        pathPadre = pathPadre.substring(0, pathPadre.length - 1);
+        pathPadre = pathPadre.substring(0, pathPadre.lastIndexOf('/') + 1);
     } else {
         pathDefault = pathPadre
     }
@@ -95,81 +125,91 @@ function cambiarNombre(viejoNombre, nuevoNombre) {
 
 //Borrar archivo
 function borrarArchivo(nombreArchivo) {
-    path = pathDefault + nombreArchivo;
-    response = mostrarContenido();
-    if (response.id == 1) {
-        directorios = response.mensaje;
-        var dirent = null;
-        for (const directorio in directorios) {
-            
-            if (directorios[directorio].name == nombreArchivo) {
-                dirent = directorios[directorio];
-            }
+    try{
+        path = pathDefault;
+        if(existeArchivo(path+nombreArchivo)){
+            var comando = "rm -R " + nombreArchivo;
+            var resultado = execSync(comando, { cwd: path }).toString()
+            return { 'id': 1, 'mensaje': `Se elimino el archivo ${nombreArchivo} correctamente` };
+        }else{
+            return { 'id': 0, 'mensaje': `No existe el archivo/carpeta ${nombreArchivo}` };
         }
-        if (dirent != null) {
-            if (dirent.isDirectory()) {
-                if (existeArchivo(path)) {
-                    fs.rmdirSync(path,{ recursive: true });
-                    return { 'id': 1, 'mensaje': `Se elimino el directorio ${nombreArchivo} correctamente` };
-                }
-            } else {
-                if (existeArchivo(path)) {
-                    fs.unlinkSync(path);
-                    return { 'id': 1, 'mensaje': `Se elimino el archivo ${nombreArchivo} correctamente` };
-                }
-            }
-        }
+    }catch(err){
+        return { 'id': 0, 'mensaje': `Error al borrar el archivo/carpeta ${nombreArchivo}` };
     }
-    return { 'id': 0, 'mensaje': `Error al borrar el archivo/carpeta ${nombreArchivo}` };
 }
 
 //Copiar/Cortar archivo
-function copiarArchivo(nombreArchivo){
-    path = pathDefault + nombreArchivo;
-    response = mostrarContenido();
-    if (response.id == 1) {
-        directorios = response.mensaje;
-        var dirent = null;
-        for (const directorio in directorios) {
-            if (directorios[directorio].name == nombreArchivo) {
-                dirent = directorios[directorio];
+function copiarArchivo(nombreArchivo,tipoArchivo,cut = false) {
+    try{
+        path = pathDefault;
+        if (existeArchivo(path+nombreArchivo)) {
+            if(tipoArchivo == 0){
+                nombreArchivo = '/'+nombreArchivo;
             }
-        }
-        if (dirent != null) {
-            if (dirent.isDirectory()) {
-                if (existeArchivo(path)) {
-                    pathCopia = {'type': 0, 'path': path,'nombre':nombreArchivo}; //Directorio
-                    return { 'id': 1, 'mensaje': `Se copio el directorio ${nombreArchivo} correctamente` };
-                }
-            } else {
-                if (existeArchivo(path)) {
-                    pathCopia = {'type': 1, 'path': path,'nombre':nombreArchivo}; //Archivo
-                    return { 'id': 1, 'mensaje': `Se copio el archivo ${nombreArchivo} correctamente` };
-                }
+            pathCopia = { 'typePaste': 0, 'path': path, 'name': nombreArchivo };
+            if(cut){
+                pathCopia = { 'typePaste': 1, 'path': path, 'name': nombreArchivo };
+                
             }
+            console.log(pathCopia.path);
+            return { 'id': 1, 'mensaje': `Se copio el directorio ${nombreArchivo} correctamente` };
+        }else{
+            return { 'id': 0, 'mensaje': `No existe el archivo/carpeta ${nombreArchivo}` };
         }
+    }catch(err){
+        return { 'id': 0, 'mensaje': `Error al copiar el archivo/carpeta ${nombreArchivo}` };
     }
-    return { 'id': 0, 'mensaje': `Error al copiar el archivo/carpeta ${nombreArchivo}` };
+
 }
 
-//Pegar archivo // Da error de permisos
+//Pegar archivo // Da error al intentar cortar un directorio con archivos
 
-function pegarArchivo(cut = false){
-    if(pathCopia.type != -1){
-        fs.copyFileSync(pathCopia.path,pathDefault+pathCopia.nombre);
-        if(cut){
-            if(pathCopia.type == 0){
-                fs.rmdirSync(pathCopia.path);
-            }else{
-                fs.unlinkSync(pathCopia.path);
+function pegarArchivo() {
+    try{
+        if (pathCopia.typePaste != -1) {
+            var comando = 'cp -R '+ pathCopia.name + ' ' + pathDefault;
+            if(pathCopia.typePaste == 1){
+                comando = 'mv '+ pathCopia.name + ' ' + pathDefault;
             }
-            pathCopia.type = {'type': -1, 'path': ''};
-            return { 'id': 1, 'mensaje': 'Se corto el archivo correctamente ' };
+            var resultado = execSync(comando, { cwd: pathCopia.path }).toString()
+            pathCopia = { 'typePaste': -1, 'path': '', 'name': '' };
+            return { 'id': 1, 'mensaje': "Finalizo correctamente" };
+            
+        } else {
+            return { 'id': 0, 'mensaje': "No se ha copiado/cortado ningun archivo antes" };
         }
-        pathCopia.type = {'type': -1, 'path': ''};
-        return { 'id': 1, 'mensaje': "Se pego el archivo correctamente" };
-    }else{
-        return { 'id': 0, 'mensaje': "No se ha copiado/cortado ningun archivo" };
+    }catch(err){
+        return { 'id': 0, 'mensaje': "Error en la operacion" +err};
+    }
+    
+}
+//Cambiar permisos
+function cambiarPermisos(nombreArchivo,permisos){
+    try{
+        var resultado = execSync("chmod -R " + permisos + " " + nombreArchivo, {cwd: pathDefault});
+        return { 'id': 1, 'mensaje': `${permisos} son los nuevo permisos del archivo ${nombreArchivo}` };
+    }catch(err){
+        return { 'id': 0, 'mensaje': "Error en la operacion" +err};
     }
 }
 
+//Cambiar propietario
+function cambiarPropitario(nombreArchivo,nuevoPropietario){
+    try{
+        var resultado = execSync("sudo chown " + nuevoPropietario + " " + nombreArchivo, {cwd: pathDefault});
+        return { 'id': 1, 'mensaje': `${nuevoPropietario} es el nuevo propietario del archivo ${nombreArchivo}` };
+    }catch(err){
+        return { 'id': 0, 'mensaje': "Error en la operacion" +err};
+    }
+}
+
+console.log(mostrarContenido());
+console.log(crearCarpeta('Dir1'));
+console.log(crearCarpeta('Dir2'));
+console.log(ingresarHijo('Dir1'));
+console.log(crearArchivo('hola'));
+console.log(copiarArchivo('hola',1));
+console.log(ingresarPadre());
+console.log(ingresarHijo('Dir2'));
+console.log(pegarArchivo());
