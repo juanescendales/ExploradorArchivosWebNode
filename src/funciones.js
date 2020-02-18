@@ -1,7 +1,7 @@
 const fs = require('fs');
 var pathPadre = './';
 var pathDefault = './';
-var pathCopia = {'type': -1, 'path': ''};
+var pathCopia = {'type': -1, 'path': '','nombre':''};
 //Existe un archivo
 function existeArchivo(path) {
     try {
@@ -73,7 +73,7 @@ function crearArchivo(nombre) {
     if (existeArchivo(totalPath)) {
         return { 'id': 0, 'mensaje': "Este archivo ya existe" };
     } else {
-        fs.openSync(totalPath, 'a');
+        fs.openSync(totalPath, 'w+');
         return { 'id': 1, 'mensaje': `Archivo '${nombre}' creado satisfactoriamente` };
     }
 }
@@ -135,12 +135,12 @@ function copiarArchivo(nombreArchivo){
         if (dirent != null) {
             if (dirent.isDirectory()) {
                 if (existeArchivo(path)) {
-                    pathCopia = {'type': 0, 'path': path}; //Directorio
+                    pathCopia = {'type': 0, 'path': path,'nombre':nombreArchivo}; //Directorio
                     return { 'id': 1, 'mensaje': `Se copio el directorio ${nombreArchivo} correctamente` };
                 }
             } else {
                 if (existeArchivo(path)) {
-                    pathCopia = {'type': 1, 'path': path}; //Archivo
+                    pathCopia = {'type': 1, 'path': path,'nombre':nombreArchivo}; //Archivo
                     return { 'id': 1, 'mensaje': `Se copio el archivo ${nombreArchivo} correctamente` };
                 }
             }
@@ -153,7 +153,7 @@ function copiarArchivo(nombreArchivo){
 
 function pegarArchivo(cut = false){
     if(pathCopia.type != -1){
-        fs.copyFileSync(pathCopia.path,pathDefault,fs.constants.COPYFILE_FICLONE);
+        fs.copyFileSync(pathCopia.path,pathDefault+pathCopia.nombre);
         if(cut){
             if(pathCopia.type == 0){
                 fs.rmdirSync(pathCopia.path);
@@ -197,4 +197,9 @@ console.log(ingresarPadre());
 console.log(ingresarPadre());
 console.log(ingresarHijo('Pablo'));
 console.log(ingresarHijo('Corazon'));
+console.log(pegarArchivo(true));
+console.log(ingresarPadre());
+console.log(copiarArchivo('Corazon'));
+console.log(ingresarPadre());
 console.log(pegarArchivo());
+
