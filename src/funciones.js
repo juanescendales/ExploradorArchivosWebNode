@@ -1,9 +1,10 @@
 const funciones = {};
 const fs = require('fs');
+const path = require('path');
 const { execSync } = require("child_process");
 
 
-funciones.rootPath = './root/';
+funciones.rootPath = path.join(__dirname+'/root/');
 funciones.pathPadre = funciones.rootPath;
 funciones.pathDefault = funciones.rootPath;
 funciones.pathCopia = { 'typePaste': -1, 'path': '', 'name': '' };
@@ -240,5 +241,6 @@ funciones.pegarArchivo = pegarArchivo;
 funciones.cambiarPermisos = cambiarPermisos;
 funciones.cambiarPropitario = cambiarPropitario;
 funciones.existeUsuario = existeUsuario;
+
 
 module.exports = funciones;
