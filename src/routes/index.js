@@ -4,7 +4,7 @@ const router = express.Router();
 const funciones = require('../funciones');
 
 router.get('/',async (req,res)=>{
-    const contenido = await funciones.mostrarContenido();
+    const contenido = funciones.mostrarContenido();
     console.log(contenido);
     res.render('index',{contenido});
 });
