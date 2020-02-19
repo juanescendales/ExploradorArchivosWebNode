@@ -150,15 +150,19 @@
 <link rel="stylesheet" type="text/css" href="https://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
 <script type="text/javascript" src="https://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
 <script type="text/javascript" src="static/js/data.js"></script>
-
+<script>
+    var contenido = <%- JSON.stringify(contenido) %>;
+</script>
 <script>
     $(function () {
         $("#treeview").shieldTreeView({
             dataSource: dataSrc
         });
-
+        console.log(contenido.directorio);
+        console.log(folderData);
         for (var key in folderData) {
             var icon="";
+            console.log(myVar);
             if(folderData[key].icon==1){
                 icon='<img class="img-responsive" src="static/icons/Folder-icon.png"\>';
             }else{
