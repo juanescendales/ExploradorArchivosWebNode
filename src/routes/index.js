@@ -12,10 +12,17 @@ router.get('/',async (req,res)=>{
     res.render('index',{contenido});
 });
 
-router.post('/ingresarCarpeta',async (req,res)=>{
+router.post('/accessChild',async (req,res)=>{
     const {name} = req.body;
     console.log(name);
     const respuesta =  funciones.ingresarHijo(name);
+    res.redirect('/');
+});
+
+router.post('/accessParent',async (req,res)=>{
+    const {name} = req.body;
+    console.log(name);
+    const respuesta =  funciones.ingresarPadre();
     res.redirect('/');
 });
 

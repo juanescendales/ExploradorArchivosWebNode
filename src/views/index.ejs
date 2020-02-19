@@ -160,10 +160,9 @@
         });
         console.log(contenido.directorio);
         console.log(folderData);
-        for (var key in folderData) {
+        for (var key in contenido.directorio) {
             var icon="";
-            console.log(myVar);
-            if(folderData[key].icon==1){
+            if(contenido.directorio[key].tipo==0){
                 icon='<img class="img-responsive" src="static/icons/Folder-icon.png"\>';
             }else{
                 icon='<img class="img-responsive" src="static/icons/Blank-icon.png"\>';
@@ -171,7 +170,7 @@
             $(".pb-filemng-template-body").append(
                 '<div class=\"col-xs-6 col-sm-6 col-md-3 pb-filemng-body-folders\">' +
                 icon+ '<br />' + 
-                '<p class="pb-filemng-paragraphs">' + folderData[key].text + '</p>' + 
+                '<p class="pb-filemng-paragraphs">' + contenido.directorio[key].name + '</p>' + 
                 '</div>'
             );
         }
