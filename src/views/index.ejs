@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <title>File Manager Template | PrepBootstrap</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <link rel="stylesheet" type="text/css" href="views/bootstrap/css/bootstrap.min.css" />
-    <link rel="stylesheet" type="text/css" href="views/font-awesome/css/font-awesome.min.css" />
-
-    <script type="text/javascript" src="views/js/jquery-1.10.2.min.js"></script>
-    <script type="text/javascript" src="views/bootstrap/js/bootstrap.min.js"></script>
+    <%- include('partials/head.ejs') %>
 </head>
 <body>
 
@@ -157,7 +149,7 @@
 <!-- you need to include the shieldui css and js assets in order for the charts to work -->
 <link rel="stylesheet" type="text/css" href="https://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
 <script type="text/javascript" src="https://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
-<script type="text/javascript" src="views/js/data.js"></script>
+<script type="text/javascript" src="static/js/data.js"></script>
 
 <script>
     $(function () {
@@ -168,9 +160,9 @@
         for (var key in folderData) {
             var icon="";
             if(folderData[key].icon==1){
-                icon='<img class="img-responsive" src="icons/Folder-icon.png"\>';
+                icon='<img class="img-responsive" src="static/icons/Folder-icon.png"\>';
             }else{
-                icon='<img class="img-responsive" src="icons/Blank-icon.png"\>';
+                icon='<img class="img-responsive" src="static/icons/Blank-icon.png"\>';
             }
             $(".pb-filemng-template-body").append(
                 '<div class=\"col-xs-6 col-sm-6 col-md-3 pb-filemng-body-folders\">' +
