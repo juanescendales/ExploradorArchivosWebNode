@@ -4,7 +4,7 @@
   "description": "Explorador de archivos",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon src/"
+    "dev": "nodemon src/app.js"
   },
   "author": "Juan Esteban Cendales , Juan Pablo Ortega",
   "license": "ISC",

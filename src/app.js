@@ -3,6 +3,9 @@ const morgan = require('morgan');
 const path = require('path');
 const app = express();
 
+// importing Routes
+const indexRoutes =require('./routes/index.js')
+
 // settings
 app.set('port', process.env.PORT || 3000);
 app.set('views', path.join(__dirname, 'views'));
@@ -12,7 +15,7 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(morgan('dev'));
 
 // routes
-app.use(require('./routes'));
+app.use('/',indexRoutes);
 
 // static files
 app.use(express.static(path.join(__dirname, 'public')));
