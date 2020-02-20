@@ -22,46 +22,95 @@ function existeArchivo(path) {
     }
 }
 //Permisos numericos
-function permisosNumericosYTipo(permisosLetras){
-    var tipo = 1;
-    if(permisosLetras[0] == 'd'){
-        tipo = 0;
+function tipoPermisos(permisos){
+    arrayPermisos = permisos.split("");
+    if(arrayPermisos[0] == 'd'){
+        return 0;
     }
-    var contador = 0;
-    var numero = "";
-    var permisos = "";
-    for(var i=1 ; i< permisosLetras.length;i++){
-        if(permisosLetras[i] == 'r' || permisosLetras[i] == 'w' || permisosLetras[i] == 'x'){
-            numero += '1';
-        }else{
-            numero += '0';
+    return 1;
+}
+function permisosJson(permisos){
+    arrayPermisos = permisos.split("");
+    var permisosDict = {
+        user:{
+            read:false,
+            write:false,
+            execution:false
+        },
+        group:{
+            read:false,
+            write:false,
+            execution:false
+        },
+        others:{
+            read:false,
+            write:false,
+            execution:false
         }
-        contador++;
-        if(contador == 3){
-            permisos += parseInt(parseInt(numero),2).toString();
-            var contador = 0;
-            var numero = "";
-        }
+    };
+    if(arrayPermisos[1]=='r'){
+        permisosDict.user.read = true;
     }
-    return {'tipo':tipo,'permisos':permisos};
+    if(arrayPermisos[2]=='w'){
+        permisosDict.user.write = true;
+    }
+    if(arrayPermisos[3]=='x'){
+        permisosDict.user.execution = true;
+    }
+    if(arrayPermisos[4]=='r'){
+        permisosDict.group.read = true;
+    }
+    if(arrayPermisos[5]=='w'){
+        permisosDict.group.write = true;
+    }
+    if(arrayPermisos[6]=='x'){
+        permisosDict.group.execution = true;
+    }
+    if(arrayPermisos[7]=='r'){
+        permisosDict.others.read = true;
+    }
+    if(arrayPermisos[8]=='w'){
+        permisosDict.others.write = true;
+    }
+    if(arrayPermisos[9]=='x'){
+        permisosDict.others.execution = true;
+    }
+    console.log(permisosDict)
+    return permisosDict ;
+}
 
+function permisoBinarioAOctal(permisoBinario){
+    arrayBinario = permisoBinario.split("");
+    permisosOctal = "";
+    var user = arrayBinario.slice(0,3).join("");
+    console.log(user);
+    var grupo = arrayBinario.slice(3,6).join("");
+    console.log(grupo);
+    var others = arrayBinario.slice(6,9).join("");
+    console.log(others);
+    permisosOctal += parseInt(parseInt(user),2).toString();
+    permisosOctal += parseInt(parseInt(grupo),2).toString();
+    permisosOctal += parseInt(parseInt(others),2).toString();
+    return permisosOctal
 }
 //Mostrar contenido del directorio actual
 function mostrarContenido (){
     try{
-        var directorios = execSync('ls -l', { cwd: funciones.pathDefault }).toString().split("\n");
+        var permisos = execSync("ls -l | awk '{print $1}'", { cwd: funciones.pathDefault }).toString().split("\n");
+        var propietarios = execSync("ls -l | awk '{print $3}'", { cwd: funciones.pathDefault }).toString().split("\n");
+        var nombres = execSync("ls | sed ''", { cwd: funciones.pathDefault }).toString().split("\n");
+        permisos = permisos.slice(1,permisos.length-1);
+        propietarios = propietarios.slice(1,propietarios.length-1);
+        nombres = nombres.slice(0,nombres.length-1);
         var lista = [];
-        directorios = directorios.slice(1, directorios.length - 1);
-        directorios.map(x => {
-            var directorio = x.split(" ");
-            var info = permisosNumericosYTipo(directorio[0].split(''));
+        for(var i = 0; i< permisos.length;i++){
             lista.push({
-                name: directorio[directorio.length - 1],
-                permissions: info.permisos,
-                propietario: directorio[2],
-                tipo: info.tipo
+                name: nombres[i],
+                permissions: funciones.permisosJson(permisos[i]),
+                propietario: propietarios[i],
+                tipo: funciones.tipoPermisos(permisos[i])
             });
-        });
+        }
         var response ={ 'general_id': 1, 'directorio': lista , 'consulta': funciones.consulta};
         funciones.consulta = {'id':-1,'mensaje':'None'};
         return response;
@@ -76,7 +125,7 @@ function mostrarContenido (){
 
 //Cambiar directorio hijo
 function ingresarHijo(nombre) {
-    path = funciones.pathDefault + nombre + '/';
+    var path = funciones.pathDefault + nombre + '/';
     if (existeArchivo(path)) {
         funciones.pathPadre = funciones.pathDefault;
         funciones.pathDefault = path;
@@ -121,8 +170,8 @@ function crearArchivo(nombre) {
 
 //Cambiar nombre //Da error si la carpeta tiene algo 
 function cambiarNombre(viejoNombre, nuevoNombre) {
-    pathViejo = funciones.pathDefault + viejoNombre;
-    pathNuevo = funciones.pathDefault + nuevoNombre;
+    var pathViejo = funciones.pathDefault + viejoNombre;
+    var pathNuevo = funciones.pathDefault + nuevoNombre;
     if (existeArchivo(pathViejo)) {
         fs.renameSync(pathViejo, pathNuevo);
         funciones.consulta = { 'id': 1, 'mensaje': "Se cambio el nombre satisfactoriamente" };
@@ -134,7 +183,7 @@ function cambiarNombre(viejoNombre, nuevoNombre) {
 //Borrar archivo
 function borrarArchivo(nombreArchivo) {
     try{
-        path = funciones.pathDefault;
+        var path = funciones.pathDefault;
         if(existeArchivo(path+nombreArchivo)){
             var comando = "rm -R " + nombreArchivo;
             var resultado = execSync(comando, { cwd: path }).toString()
@@ -150,7 +199,7 @@ function borrarArchivo(nombreArchivo) {
 //Copiar/Cortar archivo
 function copiarArchivo(nombreArchivo,cut = false) {
     try{
-        path = funciones.pathDefault;
+        var path = funciones.pathDefault;
         if (existeArchivo(path+nombreArchivo)) {
             funciones.pathCopia = { 'typePaste': 0, 'path': path, 'name': nombreArchivo };
             if(cut){
@@ -191,10 +240,11 @@ function pegarArchivo() {
 //Cambiar permisos
 function cambiarPermisos(nombreArchivo,permisos){
     try{
-        var comando = 'chmod -R '+ permisos + ' ' + nombreArchivo;
+        var permisosOctales = funciones.permisoBinarioAOctal(permisos);
+        console.log(permisosOctales);
+        var comando = 'chmod -R '+ permisosOctales + ' ' + nombreArchivo;
         console.log(comando);
         var resultado = execSync(comando, {cwd:funciones.pathDefault});
-        console.log(resultado.toString());
         funciones.consulta = { 'id': 1, 'mensaje': `${permisos} son los nuevo permisos del archivo ${nombreArchivo}` };
     }catch(err){
         funciones.consulta = { 'id': 0, 'mensaje': "Error en la operacion" +err};
@@ -229,11 +279,14 @@ function existeUsuario(user){
 //Incluyendo Metodos
 
 funciones.existeArchivo = existeArchivo;
-funciones.permisosNumericosYTipo = permisosNumericosYTipo;
+funciones.tipoPermisos =tipoPermisos;
+funciones.permisosJson = permisosJson;
+funciones.permisoBinarioAOctal = permisoBinarioAOctal;
 funciones.mostrarContenido =  mostrarContenido;
 funciones.ingresarHijo = ingresarHijo;
 funciones.ingresarPadre = ingresarPadre;
 funciones.crearCarpeta = crearCarpeta;
+funciones.crearArchivo = crearArchivo;
 funciones.cambiarNombre = cambiarNombre;
 funciones.borrarArchivo = borrarArchivo;
 funciones.copiarArchivo = copiarArchivo;
@@ -241,6 +294,5 @@ funciones.pegarArchivo = pegarArchivo;
 funciones.cambiarPermisos = cambiarPermisos;
 funciones.cambiarPropitario = cambiarPropitario;
 funciones.existeUsuario = existeUsuario;
-
 
 module.exports = funciones;
