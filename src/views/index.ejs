@@ -8,7 +8,7 @@
 <div class="container">
 
 <div class="page-header">
-    <h1>File Manager <small>Juan Esteban Cendales Sora - Juan Pablo Ortega Medina</small></h1>
+    <h1>Linux File Manager <small>Juan Esteban Cendales Sora - Juan Pablo Ortega Medina</small></h1>
 </div>
 
 <!-- File Manager - START -->
@@ -19,31 +19,20 @@
             <nav class="navbar navbar-default pb-filemng-navbar">
                 <div class="container-fluid">
                     <!-- Navigation -->
-                    <div class="navbar-header">
-                        <button type="button" class="pull-left navbar-toggle collapsed treeview-toggle-btn" data-toggle="collapse" data-target="#treeview-toggle" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                            <span class="icon-bar"></span>
-                        </button>
-
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#options" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="fa fa-gears"></span>
-                        </button>
-
-                        <!-- Search button -->
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#pb-filemng-navigation" aria-expanded="false">
-                            <span class="sr-only">Toggle navigation</span>
-                            <span class="fa fa-share"></span>
-                        </button>
-                    </div>
+                  
 
                     <ul class="collapse navbar-collapse nav navbar-nav navbar-right" id="options">
-                        <li><a href="#"><span class="fa fa-crosshairs fa-lg"></span></a></li>
-                        <li><a href="#"><span class="fa fa-ellipsis-v fa-lg"></span></a></li>
-                        <li><a href="#"><span class="fa fa-lg fa-server"></span></a></li>
+                        <li class="pb-filemng-active"><a href="#"><span class="fa fa-folder fa-lg"></span></a></li>
+                        <li class="pb-filemng-active"><a href="#"><span class="fa fa-file fa-lg"></span></a></li>
                     </ul>
+
+
+                    <!-- Collect the nav links, forms, and other content for toggling -->
+                    <div class="collapse navbar-collapse" id="pb-filemng-navigation">
+                        <ul class="nav navbar-nav">
+                            <li><a href="#"><span class="fa fa-chevron-left fa-lg"></span></a></li>
+                        </ul>
+                    </div>
 
                     <!-- /.navbar-collapse -->
 
@@ -53,7 +42,7 @@
             <div class="panel panel-default">
                 <div class="panel-body pb-filemng-panel-body">
                     <div class="row">
-                        <div class="col-sm-12 col-md-12 pb-filemng-template-body">
+                        <div class="col-sm-12 col-md-12 pb-filemng-template-body div-general-img">
                         </div>
                     </div>
                 </div>
@@ -61,122 +50,151 @@
         </div>
     </div>
 </div>
+<div id="contextMenu" class="dropdown clearfix">
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+      <li><a tabindex="-1" id="copy" href="#">Copiar</a>
+      </li>
+      <li><a tabindex="-1" id="cut" href="#">Cortar</a>
+      </li>
+      <li><a tabindex="-1" id="paste" href="#">Pegar</a>
+      </li>
+      <li><a tabindex="-1" id="delete" href="#">Borrar</a>
+      </li>
+      <li><a tabindex="-1" id="rename" href="#">Cambiar nombre</a>
+      </li>
+      <li class="divider"></li>
+      <li><a tabindex="-1" id="permissions" href="#">Permisos</a>
+      </li>
+    </ul>
+  </div>
 
-<style>
-    .pb-filemng-template {
-	    margin-top: 40px;
-	    font-family: 'Sansita', sans-serif;
-    }
+  <!-- Modal rename -->
+  <div class="modal fade" id="renameModal" tabindex="-1" role="dialog" aria-labelledby="renameModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="renameModalLabel">Rename <strong><span id="name-rename"></span></strong></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="form-rename">
+                <div class="form-group">
+                  <label for="exampleInputEmail1">Nombre</label>
+                  <input type="text" class="form-control" id="name-input" aria-describedby="nameHelp" placeholder="Ingrese un nombre">
+                  <small id="nameHelp" class="form-text text-muted">Ingrese un nombre para <span id="help-rename"></span>.</small>
+                </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
 
-    .pb-filemng-navbar {
-	    margin-bottom: 0;
-    }
+  <!-- Modal permissions -->
+  <div class="modal fade" id="permissionsModal" tabindex="-1" role="dialog" aria-labelledby="permissionsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="permissionsModalLabel">Permisos <strong><span id="name-permissions"></span></strong></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="form-permissions">
+                <div class="form-group row">
+                    <label for="propietario" class="col-sm-2 col-form-label">Propietario</label>
+                    <div class="col-sm-10">
+                        <strong><label class="col-sm-12 col-form-label" id="propietario">Jose Obdulio</label></strong>
+                    </div>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                        <select class="form-control" id="read-write-owner">
+                            <option value="00">Ninguna</option>
+                            <option value="01">Escribir solamente</option>
+                            <option value="10">Leer solamente</option>
+                            <option value="11">Leer y escribir</option>
+                          </select>
+                    </div>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="exec-input">
+                    <label class="form-check-label" for="exec-input-owner">
+                      Permisos de ejecusion
+                    </label>
+                  </div>
+                  <hr>
+                  <div class="form-group row">
+                    <label class="col-sm-12 col-form-label">Grupo</label>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                        <select class="form-control" id="read-write-group">
+                            <option value="00">Ninguna</option>
+                            <option value="01">Escribir solamente</option>
+                            <option value="10">Leer solamente</option>
+                            <option value="11">Leer y escribir</option>
+                          </select>
+                    </div>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="exec-input">
+                    <label class="form-check-label" for="exec-input-group">
+                      Permisos de ejecusion
+                    </label>
+                  </div>
+                  <hr>
+                  <div class="form-group row">
+                    <label class="col-sm-12 col-form-label">Otros</label>
+                  </div>
+                  <div class="form-group row">
+                    <div class="col-sm-12">
+                        <select class="form-control" id="read-write-others">
+                            <option value="00">Ninguna</option>
+                            <option value="01">Escribir solamente</option>
+                            <option value="10">Leer solamente</option>
+                            <option value="11">Leer y escribir</option>
+                          </select>
+                    </div>
+                  </div>
+                  <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="exec-input">
+                    <label class="form-check-label" for="exec-input-others">
+                      Permisos de ejecusion
+                    </label>
+                  </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+</div>
 
-    .treeview-toggle-btn {
-	    margin-left: 15px;
-    }
-
-    .pb-filemng-template-btn {
-	    background-color: Transparent;
-        background-repeat:no-repeat;
-        border: none;
-        cursor:pointer;
-        outline:none;
-        color: gray;
-        padding: 0px 13px 0px 13px;
-    }
-
-    .pb-filemng-active {
-	    border-bottom: 2px solid #6d97db;
-	    color: #5f6977;
-    }
-
-    .pb-filemng-template-btn:hover {
-	    color: blue;
-    }
-
-    .pb-filemng-body-folders > img:hover {
-	    cursor: pointer;
-    }
-
-    .btn-align {
-	    margin-top: 7px;
-    }
-
-    .pb-filemng-template-treeview {
-	    border-right: 1px solid gray;
-    }
-
-    .pb-filemng-folder {
-	    color: orange;
-	    padding-bottom: 3px;
-    }
-
-    .pb-filemng-paragraphs {
-	    margin-top: -20px;
-	    text-align: center;
-    }
-
-    .img-responsive {
-	    margin: 0 auto;
-    }
-
-@media screen and (max-width: 767px) {
-
-	.pb-filemng-template-treeview {
-		border-right: none;
-	}
-
-	#options {
-		text-align: center;
-	}
-
-	#options > li {
-		display: inline-block;
-	}
-
-	#pb-filemng-navigation > ul {
-		text-align: center;
-	}
-
-	#pb-filemng-navigation > ul > li {
-		display: inline-block;
-	}
-
-}
-</style>
+<link rel="stylesheet" type="text/css" href="static/css/style.css" />
 
 <!-- you need to include the shieldui css and js assets in order for the charts to work -->
-<link rel="stylesheet" type="text/css" href="https://www.shieldui.com/shared/components/latest/css/light-bootstrap/all.min.css" />
-<script type="text/javascript" src="https://www.shieldui.com/shared/components/latest/js/shieldui-all.min.js"></script>
-<script type="text/javascript" src="static/js/data.js"></script>
+<link rel="stylesheet" type="text/css" href="static/css/all.min.css" />
+<script type="text/javascript" src="static/js/shieldui-all.min.js"></script>
 <script>
     var contenido = <%- JSON.stringify(contenido) %>;
 </script>
-<script>
-    $(function () {
-        $("#treeview").shieldTreeView({
-            dataSource: dataSrc
-        });
-        console.log(contenido.directorio);
-        console.log(folderData);
-        for (var key in contenido.directorio) {
-            var icon="";
-            if(contenido.directorio[key].tipo==0){
-                icon='<img class="img-responsive" src="static/icons/Folder-icon.png"\>';
-            }else{
-                icon='<img class="img-responsive" src="static/icons/Blank-icon.png"\>';
-            }
-            $(".pb-filemng-template-body").append(
-                '<div class=\"col-xs-6 col-sm-6 col-md-3 pb-filemng-body-folders\">' +
-                icon+ '<br />' + 
-                '<p class="pb-filemng-paragraphs">' + contenido.directorio[key].name + '</p>' + 
-                '</div>'
-            );
-        }
-    })
-</script>
+<script type="text/javascript" src="static/js/script.js"></script>
+
+
 <!-- File Manager - END -->
+
+
 
 </div>
 
