@@ -141,7 +141,7 @@ $( document ).ready(function() {
 
         $("#go-back").click(function(e){
             e.preventDefault();
-            $.post("/accessChild", function(result){
+            $.post("/accessParent", function(result){
                 if(result.response=="success"){
                     window.location.replace("/");
                 }

@@ -20,8 +20,6 @@ router.post('/accessChild',async (req,res)=>{
 });
 
 router.post('/accessParent',async (req,res)=>{
-    const {name} = req.body;
-    console.log(name);
     const respuesta =  funciones.ingresarPadre();
     res.json({'response':'success'});
 });
