@@ -90,3 +90,9 @@ display: inline-flex;
     position: absolute;
     display: none;
   }
+
+
+#contextMenuGeneral {
+    position: absolute;
+    display: none;
+  }

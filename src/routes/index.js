@@ -49,7 +49,7 @@ router.post('/rename',async (req,res)=>{
 router.post('/delete',async (req,res)=>{
     const {name} = req.body;
     console.log(name);
-    const respuesta =  funciones.borrarArchivo(name,newName);
+    const respuesta =  funciones.borrarArchivo(name);
     res.json({'response':'success'});
 });
 

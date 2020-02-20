@@ -56,7 +56,7 @@
       </li>
       <li><a tabindex="-1" id="cut" href="#">Cortar</a>
       </li>
-      <li><a tabindex="-1" id="paste" href="#">Pegar</a>
+      <li><a tabindex="-1" class="paste" href="#">Pegar</a>
       </li>
       <li><a tabindex="-1" id="delete" href="#">Borrar</a>
       </li>
@@ -64,6 +64,13 @@
       </li>
       <li class="divider"></li>
       <li><a tabindex="-1" id="permissions" href="#">Permisos</a>
+      </li>
+    </ul>
+  </div>
+
+  <div id="contextMenuGeneral" class="dropdown clearfix">
+    <ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu" style="display:block;position:static;margin-bottom:5px;">
+      <li><a tabindex="-1" class="paste" href="#">Pegar</a>
       </li>
     </ul>
   </div>
@@ -82,7 +89,7 @@
             <form id="form-rename">
                 <div class="form-group">
                   <label for="exampleInputEmail1">Nombre</label>
-                  <input type="text" class="form-control" id="name-input" aria-describedby="nameHelp" placeholder="Ingrese un nombre">
+                  <input type="text" class="form-control" id="name-input" required="true" aria-describedby="nameHelp" placeholder="Ingrese un nombre">
                   <small id="nameHelp" class="form-text text-muted">Ingrese un nombre para <span id="help-rename"></span>.</small>
                 </div>
         </div>
@@ -95,7 +102,7 @@
     </div>
   </div>
 
-  <!-- Modal rename -->
+  <!-- Modal Element -->
   <div class="modal fade" id="newElementModal" tabindex="-1" role="dialog" aria-labelledby="newElementModalLabel" aria-hidden="true">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
@@ -109,7 +116,8 @@
             <form id="form-new-element">
                 <div class="form-group">
                   <label for="exampleInputEmail1">Nombre</label>
-                  <input type="text" class="form-control" id="new-name-input" aria-describedby="nameHelp" placeholder="Ingrese un nombre">
+                  <input type="hidden" id="type">
+                  <input type="text" class="form-control" id="new-name-input" required="true" aria-describedby="nameHelp" placeholder="Ingrese un nombre">
                   <small id="nameHelp" class="form-text text-muted">Ingrese un nombre para <span id="help-new" ></span>.</small>
                 </div>
         </div>

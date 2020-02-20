@@ -54,24 +54,41 @@ $( document ).ready(function() {
 
         
         var $contextMenu = $("#contextMenu");
+        var $contextMenuGeneral = $("#contextMenuGeneral");
 
         $("body").on("contextmenu", "img", function(e) {
+            $contextMenuGeneral.hide();
             $contextMenu.css({
                 display: "block",
                 left: e.pageX,
                 top: e.pageY
             });
-            if(selected.name==""){
+            if($(this).hasClass("img-selected")==false){
                 selectSomething(this);
             }
             return false;
         });
 
+        $("body").on("contextmenu", ".div-general-img", function(e) {
+            $contextMenu.hide();
+            $contextMenuGeneral.css({
+                display: "block",
+                left: e.pageX,
+                top: e.pageY
+            });
+            return false;
+        });
+
         $('html').click(function() {
             $contextMenu.hide();
+            $contextMenuGeneral.hide();
         });
     
         $("#contextMenu li a").click(function(e){
+            var  f = $(this);
+        });
+
+        $("#contextMenuGeneral li a").click(function(e){
             var  f = $(this);
         });
 
@@ -90,18 +107,38 @@ $( document ).ready(function() {
 
         $("#copy").click(function(e){
             e.preventDefault();
+            $.post("/copy", {"name": selected.name}, function(result){
+                if(result.response=="success"){
+                    return true;
+                }
+              });
         });
 
         $("#cut").click(function(e){
             e.preventDefault();
+            $.post("/cut", {"name": selected.name}, function(result){
+                if(result.response=="success"){
+                    return true;
+                }
+              });
         });
 
-        $("#paste").click(function(e){
+        $(".paste").click(function(e){
             e.preventDefault();
+            $.post("/paste", function(result){
+                if(result.response=="success"){
+                    window.location.replace("/");
+                }
+              });
         });
 
         $("#delete").click(function(e){
             e.preventDefault();
+            $.post("/delete", {"name": selected.name}, function(result){
+                if(result.response=="success"){
+                    window.location.replace("/");
+                }
+              });
         });
 
         $("#rename").click(function(e){
@@ -117,6 +154,12 @@ $( document ).ready(function() {
 
         $("#form-rename").submit(function(e){
             e.preventDefault();
+            var newName=$("#name-input").val();
+            $.post("/rename", {"name": selected.name,"newName":newName}, function(result){
+                if(result.response=="success"){
+                    window.location.replace("/");
+                }
+              });
         });
 
         $("#permissions").click(function(e){
@@ -130,6 +173,7 @@ $( document ).ready(function() {
             $("#newElementModal").modal("show");
             $("#new-element").html("Nueva Carpeta");
             $("#help-new").html("la nueva carpeta");
+            $("#type").val("folder");
         });
 
         $("#new-file").click(function(e){
@@ -137,6 +181,27 @@ $( document ).ready(function() {
             $("#newElementModal").modal("show");
             $("#new-element").html("Nuevo Archivo");
             $("#help-new").html("el nuevo archivo");
+            $("#type").val("file");
+        });
+
+        $("#form-new-element").submit(function(e){
+            e.preventDefault();
+            var type=$("#type").val();
+            var name=$("#new-name-input").val();
+            if(type=="folder"){
+                $.post("/createDir", {"name": name}, function(result){
+                    if(result.response=="success"){
+                        window.location.replace("/");
+                    }
+                  });
+            }else if(type=="file"){
+                $.post("/createFile", {"name": name}, function(result){
+                    if(result.response=="success"){
+                        window.location.replace("/");
+                    }
+                  });
+            }
+            
         });
 
         $("#go-back").click(function(e){
