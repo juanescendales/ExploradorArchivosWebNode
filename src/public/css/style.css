@@ -96,3 +96,7 @@ display: inline-flex;
     position: absolute;
     display: none;
   }
+
+.div-general-img{
+  min-height: 50px;
+}

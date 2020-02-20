@@ -163,7 +163,8 @@ function ingresarPadre() {
 
 //Crear carpeta
 function crearCarpeta(nombre) {
-    const totalPath = funciones.pathDefault + nombre
+    var nombreSinEspacios = nombre.replace(/ /g,'_');
+    const totalPath = funciones.pathDefault + nombreSinEspacios;
     if (existeArchivo(totalPath)) {
         funciones.consulta = { 'id': 0, 'mensaje': "Este directorio ya existe" };
     } else {
@@ -174,7 +175,8 @@ function crearCarpeta(nombre) {
 
 //Crear archivo
 function crearArchivo(nombre) {
-    const totalPath = funciones.pathDefault + nombre
+    var nombreSinEspacios = nombre.replace(/ /g,'_');
+    const totalPath = funciones.pathDefault + nombreSinEspacios;
     if (existeArchivo(totalPath)) {
         funciones.consulta = { 'id': 0, 'mensaje': "Este archivo ya existe" };
     } else {
@@ -185,8 +187,9 @@ function crearArchivo(nombre) {
 
 //Cambiar nombre //Da error si la carpeta tiene algo 
 function cambiarNombre(viejoNombre, nuevoNombre) {
+    var nombreSinEspacios = nuevoNombre.replace(/ /g,'_');
     var pathViejo = funciones.pathDefault + viejoNombre;
-    var pathNuevo = funciones.pathDefault + nuevoNombre;
+    var pathNuevo = funciones.pathDefault + nombreSinEspacios;
     if (existeArchivo(pathViejo)) {
         fs.renameSync(pathViejo, pathNuevo);
         funciones.consulta = { 'id': 1, 'mensaje': "Se cambio el nombre satisfactoriamente" };
