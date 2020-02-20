@@ -222,12 +222,17 @@ function pegarArchivo() {
     try{
         if (funciones.pathCopia.typePaste != -1) {
             var path = funciones.pathCopia.path+funciones.pathCopia.name;
-            var direccionNormalizada = funciones.pathDefault.split("/").map(function(item){
+            var direccionDestinoNormalizada = funciones.pathDefault.split("/").map(function(item){
                 return "'"+item+"'"
             }).join("/");
-            var comando = 'cp -R '+ path + ' ' + direccionNormalizada;
+
+            var direccionOrigenNormalizada = path.split("/").map(function(item){
+                return "'"+item+"'"
+            }).join("/");
+
+            var comando = 'cp -R '+ direccionOrigenNormalizada + ' ' + direccionDestinoNormalizada;
             if(funciones.pathCopia.typePaste == 1){
-                comando = 'mv '+ path+ ' ' + funciones.pathDefault;
+                comando = 'mv '+ direccionOrigenNormalizada+ ' ' + direccionDestinoNormalizada;
             }
             var resultado = execSync(comando, { cwd: './'}).toString()
             funciones.pathCopia = { 'typePaste': -1, 'path': '', 'name': '' };
