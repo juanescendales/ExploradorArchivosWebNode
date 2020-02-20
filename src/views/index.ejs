@@ -92,13 +92,40 @@
         <div class="modal-body">
             <form id="form-rename">
                 <div class="form-group">
-                  <label for="exampleInputEmail1">Nombre</label>
+                  <label for="exampleInputNombre">Nombre</label>
                   <input type="text" class="form-control" id="name-input" required="true" aria-describedby="nameHelp" placeholder="Ingrese un nombre">
                   <small id="nameHelp" class="form-text text-muted">Ingrese un nombre para <span id="help-rename"></span>.</small>
                 </div>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">Guardar</button>
+        </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal rename -->
+  <div class="modal fade" id="ownerModal" tabindex="-1" role="dialog" aria-labelledby="ownerModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="renameModalLabel">Nuevo propietario</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+            <form id="form-owner">
+                <div class="form-group">
+                  <label for="exampleInputNombre">Nombre</label>
+                  <input type="text" class="form-control" id="name-owner" required="true" aria-describedby="nameHelp" placeholder="Ingrese un nombre">
+                  <small id="nameHelp" class="form-text text-muted">Ingrese un nombre para el nuevo propietario</small>
+                </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" id="cancel-owner">Cancelar</button>
           <button type="submit" class="btn btn-primary">Guardar</button>
         </form>
         </div>
@@ -210,6 +237,7 @@
                   </div>
         </div>
         <div class="modal-footer">
+          <button type="button" class="btn btn-info" id="change-owner" data-dismiss="modal">Cambiar propietario</button>
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
           <button type="submit" class="btn btn-primary">Guardar</button>
         </form>

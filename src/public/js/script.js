@@ -166,6 +166,7 @@ $( document ).ready(function() {
             e.preventDefault();
             $("#permissionsModal").modal("show");
             $("#name-permissions").html(selected.name);
+            console.log(contenido);
         });
 
         $(".new-folder").click(function(e){
@@ -211,6 +212,18 @@ $( document ).ready(function() {
                     window.location.replace("/");
                 }
               });
+        });
+
+        $("#change-owner").click(function(e){
+            e.preventDefault();
+            $("#permissionsModal").modal("hide");
+            $("#ownerModal").modal("show");
+        });
+
+        $("#cancel-owner").click(function(e){
+            e.preventDefault();
+            $("#ownerModal").modal("hide");
+            $("#permissionsModal").modal("show"); 
         });
     });
 
