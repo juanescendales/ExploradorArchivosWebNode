@@ -173,33 +173,33 @@ $( document ).ready(function() {
                     id=key;
                 }
             }
-            $("#propietario").html(contenido.directorio[key].propietario);
+            $("#propietario").html(contenido.directorio[id].propietario);
             var user = "";
-            user=user.concat(contenido.directorio[key].permissions.user.read ? "1" : "0");
-            user=user.concat(contenido.directorio[key].permissions.user.write ? "1" : "0");
+            user=user.concat(contenido.directorio[id].permissions.user.read ? "1" : "0");
+            user=user.concat(contenido.directorio[id].permissions.user.write ? "1" : "0");
             $("#read-write-user").val(user);
-            if(contenido.directorio[key].permissions.user.execution){   //Entra pero no hace el cambio
-                $("#exec-input-user").select(true);
+            if(contenido.directorio[id].permissions.user.execution){   
+                document.getElementById("exec-input-user").checked = true;
             }else{
-                $("#exec-input-user").select(false);
+                document.getElementById("exec-input-user").checked = false;
             }
             var group = "";
-            group=group.concat(contenido.directorio[key].permissions.group.read ? "1" : "0");
-            group=group.concat(contenido.directorio[key].permissions.group.write ? "1" : "0");
+            group=group.concat(contenido.directorio[id].permissions.group.read ? "1" : "0");
+            group=group.concat(contenido.directorio[id].permissions.group.write ? "1" : "0");
             $("#read-write-group").val(group);
-            if(contenido.directorio[key].permissions.group.execution){ //Entra pero no hace el cambio
-                $("#exec-input-group").select(true);
+            if(contenido.directorio[id].permissions.group.execution){ 
+                document.getElementById("exec-input-group").checked = true;
             }else{
-                $("#exec-input-group").select(false);
+                document.getElementById("exec-input-group").checked = false;
             }
             var others = "";
-            others=others.concat(contenido.directorio[key].permissions.others.read ? "1" : "0");
-            others=others.concat(contenido.directorio[key].permissions.others.write ? "1" : "0");
+            others=others.concat(contenido.directorio[id].permissions.others.read ? "1" : "0");
+            others=others.concat(contenido.directorio[id].permissions.others.write ? "1" : "0");
             $("#read-write-others").val(others);
-            if(contenido.directorio[key].permissions.others.execution){ //Entra pero no hace el cambio
-                $("#exec-input-others").select(true);
+            if(contenido.directorio[id].permissions.others.execution){ 
+                document.getElementById("exec-input-others").checked = true;
             }else{
-                $("#exec-input-others").select(false);
+                document.getElementById("exec-input-others").checked = false;
             }
         });
 

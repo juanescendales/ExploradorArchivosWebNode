@@ -116,7 +116,23 @@ function mostrarContenido (){
         return response;
         
     }catch(err){
-        var response ={ 'general_id': 0, 'directorio': err , 'consulta': 'Error General'};
+        ingresarPadre();
+        var permisos = execSync("ls -l | awk '{print $1}'", { cwd: funciones.pathDefault }).toString().split("\n");
+        var propietarios = execSync("ls -l | awk '{print $3}'", { cwd: funciones.pathDefault }).toString().split("\n");
+        var nombres = execSync("ls | sed ''", { cwd: funciones.pathDefault }).toString().split("\n");
+        permisos = permisos.slice(1,permisos.length-1);
+        propietarios = propietarios.slice(1,propietarios.length-1);
+        nombres = nombres.slice(0,nombres.length-1);
+        var lista = [];
+        for(var i = 0; i< permisos.length;i++){
+            lista.push({
+                name: nombres[i],
+                permissions: funciones.permisosJson(permisos[i]),
+                propietario: propietarios[i],
+                tipo: funciones.tipoPermisos(permisos[i])
+            });
+        }
+        var response ={ 'general_id': 0, 'directorio': lista , 'consulta': funciones.consulta};  //general id 0  = no tiene permisos para entrar
         funciones.consulta = {'id':-1,'mensaje':'None'};
         return response;
     }
