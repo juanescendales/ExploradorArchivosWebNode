@@ -79,6 +79,15 @@ $( document ).ready(function() {
             selectSomething(this);
         });
 
+        $(".img").dblclick(function(){
+            selectSomething(this);
+            $.post("/accessChild", {"name": selected.name}, function(result){
+                if(result.response=="success"){
+                    window.location.replace("/");
+                }
+              });
+          }); 
+
         $("#copy").click(function(e){
             e.preventDefault();
         });
@@ -114,6 +123,29 @@ $( document ).ready(function() {
             e.preventDefault();
             $("#permissionsModal").modal("show");
             $("#name-permissions").html(selected.name);
+        });
+
+        $("#new-folder").click(function(e){
+            e.preventDefault();
+            $("#newElementModal").modal("show");
+            $("#new-element").html("Nueva Carpeta");
+            $("#help-new").html("la nueva carpeta");
+        });
+
+        $("#new-file").click(function(e){
+            e.preventDefault();
+            $("#newElementModal").modal("show");
+            $("#new-element").html("Nuevo Archivo");
+            $("#help-new").html("el nuevo archivo");
+        });
+
+        $("#go-back").click(function(e){
+            e.preventDefault();
+            $.post("/accessChild", function(result){
+                if(result.response=="success"){
+                    window.location.replace("/");
+                }
+              });
         });
     });
 
