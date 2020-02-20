@@ -221,8 +221,11 @@ function copiarArchivo(nombreArchivo,cut = false) {
 function pegarArchivo() {
     try{
         if (funciones.pathCopia.typePaste != -1) {
-            var path = funciones.pathCopia.path+"/"+funciones.pathCopia.name;
-            var comando = 'cp -R '+ path + ' ' + funciones.pathDefault;
+            var path = funciones.pathCopia.path+funciones.pathCopia.name;
+            var direccionNormalizada = funciones.pathDefault.split("/").map(function(item){
+                return "'"+item+"'"
+            }).join("/");
+            var comando = 'cp -R '+ path + ' ' + direccionNormalizada;
             if(funciones.pathCopia.typePaste == 1){
                 comando = 'mv '+ path+ ' ' + funciones.pathDefault;
             }
