@@ -37,6 +37,7 @@ $( document ).ready(function() {
             console.log(selected);
           }
         var selected = {name:"", type:""};
+        console.log(contenido.directorio);
         for (var key in contenido.directorio) {
             var icon="";
             if(contenido.directorio[key].tipo==0){
@@ -166,7 +167,68 @@ $( document ).ready(function() {
             e.preventDefault();
             $("#permissionsModal").modal("show");
             $("#name-permissions").html(selected.name);
-            console.log(contenido);
+            var id=0;
+            for (var key in contenido.directorio) {
+                if(contenido.directorio[key].name==selected.name){
+                    id=key;
+                }
+            }
+            $("#propietario").html(contenido.directorio[key].propietario);
+            var user = "";
+            user=user.concat(contenido.directorio[key].permissions.user.read ? "1" : "0");
+            user=user.concat(contenido.directorio[key].permissions.user.write ? "1" : "0");
+            $("#read-write-user").val(user);
+            if(contenido.directorio[key].permissions.user.execution){
+                $("#exec-input-user").select(true);
+            }else{
+                $("#exec-input-user").select(false);
+            }
+            var group = "";
+            group=group.concat(contenido.directorio[key].permissions.group.read ? "1" : "0");
+            group=group.concat(contenido.directorio[key].permissions.group.write ? "1" : "0");
+            $("#read-write-group").val(group);
+            if(contenido.directorio[key].permissions.group.execution){
+                $("#exec-input-group").select(true);
+            }else{
+                $("#exec-input-group").select(false);
+            }
+            var others = "";
+            others=others.concat(contenido.directorio[key].permissions.others.read ? "1" : "0");
+            others=others.concat(contenido.directorio[key].permissions.others.write ? "1" : "0");
+            $("#read-write-others").val(others);
+            if(contenido.directorio[key].permissions.others.execution){
+                $("#exec-input-others").select(true);
+            }else{
+                $("#exec-input-others").select(false);
+            }
+        });
+
+        $("#form-permissions").submit(function(e){
+            event.preventDefault();
+            var user=$("#read-write-user").val();
+            if($("#exec-input-user").prop("checked")){
+                user=user.concat("1");
+            }else{
+                user=user.concat("0");
+            }
+            var group=$("#read-write-group").val();
+            if($("#exec-input-group").prop("checked")){
+                group=group.concat("1");
+            }else{
+                group=group.concat("0");
+            }
+            var others=$("#read-write-others").val();
+            if($("#exec-input-others").prop("checked")){
+                others=others.concat("1");
+            }else{
+                others=others.concat("0");
+            }
+            var permissions=user+group+others;
+            $.post("/chmod", {"name": selected.name,"permissions":permissions}, function(result){
+                if(result.response=="success"){
+                    window.location.replace("/");
+                }
+              });
         });
 
         $(".new-folder").click(function(e){
@@ -224,6 +286,16 @@ $( document ).ready(function() {
             e.preventDefault();
             $("#ownerModal").modal("hide");
             $("#permissionsModal").modal("show"); 
+        });
+
+        $("#form-owner").submit(function(e){
+            e.preventDefault();
+            var newOwner=$("#name-owner").val();
+            $.post("/chown", {"name": selected.name,"newOwner":newOwner}, function(result){
+                if(result.response=="success"){
+                    window.location.replace("/");
+                }
+              });
         });
     });
 
