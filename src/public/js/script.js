@@ -178,7 +178,7 @@ $( document ).ready(function() {
             user=user.concat(contenido.directorio[key].permissions.user.read ? "1" : "0");
             user=user.concat(contenido.directorio[key].permissions.user.write ? "1" : "0");
             $("#read-write-user").val(user);
-            if(contenido.directorio[key].permissions.user.execution){
+            if(contenido.directorio[key].permissions.user.execution){   //Entra pero no hace el cambio
                 $("#exec-input-user").select(true);
             }else{
                 $("#exec-input-user").select(false);
@@ -187,7 +187,7 @@ $( document ).ready(function() {
             group=group.concat(contenido.directorio[key].permissions.group.read ? "1" : "0");
             group=group.concat(contenido.directorio[key].permissions.group.write ? "1" : "0");
             $("#read-write-group").val(group);
-            if(contenido.directorio[key].permissions.group.execution){
+            if(contenido.directorio[key].permissions.group.execution){ //Entra pero no hace el cambio
                 $("#exec-input-group").select(true);
             }else{
                 $("#exec-input-group").select(false);
@@ -196,7 +196,7 @@ $( document ).ready(function() {
             others=others.concat(contenido.directorio[key].permissions.others.read ? "1" : "0");
             others=others.concat(contenido.directorio[key].permissions.others.write ? "1" : "0");
             $("#read-write-others").val(others);
-            if(contenido.directorio[key].permissions.others.execution){
+            if(contenido.directorio[key].permissions.others.execution){ //Entra pero no hace el cambio
                 $("#exec-input-others").select(true);
             }else{
                 $("#exec-input-others").select(false);
@@ -224,6 +224,7 @@ $( document ).ready(function() {
                 others=others.concat("0");
             }
             var permissions=user+group+others;
+            console.log(permissions);
             $.post("/chmod", {"name": selected.name,"permissions":permissions}, function(result){
                 if(result.response=="success"){
                     window.location.replace("/");
@@ -288,10 +289,10 @@ $( document ).ready(function() {
             $("#permissionsModal").modal("show"); 
         });
 
-        $("#form-owner").submit(function(e){
+        $("#form-owner").submit(function(e){        
             e.preventDefault();
             var newOwner=$("#name-owner").val();
-            $.post("/chown", {"name": selected.name,"newOwner":newOwner}, function(result){
+            $.post("/chown", {"name": selected.name,"newOwner":newOwner}, function(result){   //recibir mensaje y mostrar en caso de que el usuario no exista
                 if(result.response=="success"){
                     window.location.replace("/");
                 }
