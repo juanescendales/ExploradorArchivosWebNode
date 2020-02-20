@@ -168,7 +168,7 @@ $( document ).ready(function() {
             $("#name-permissions").html(selected.name);
         });
 
-        $("#new-folder").click(function(e){
+        $(".new-folder").click(function(e){
             e.preventDefault();
             $("#newElementModal").modal("show");
             $("#new-element").html("Nueva Carpeta");
@@ -176,7 +176,7 @@ $( document ).ready(function() {
             $("#type").val("folder");
         });
 
-        $("#new-file").click(function(e){
+        $(".new-file").click(function(e){
             e.preventDefault();
             $("#newElementModal").modal("show");
             $("#new-element").html("Nuevo Archivo");
