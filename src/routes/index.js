@@ -16,28 +16,28 @@ router.post('/accessChild',async (req,res)=>{
     const {name} = req.body;
     console.log(name);
     const respuesta =  funciones.ingresarHijo(name);
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 router.post('/accessParent',async (req,res)=>{
     const {name} = req.body;
     console.log(name);
     const respuesta =  funciones.ingresarPadre();
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 router.post('/createFile',async (req,res)=>{
     const {name} = req.body;
     console.log(name);
     const respuesta =  funciones.crearArchivo(name);
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 router.post('/createDir',async (req,res)=>{
     const {name} = req.body;
     console.log(name);
     const respuesta =  funciones.crearCarpeta(name);
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 router.post('/rename',async (req,res)=>{
@@ -45,33 +45,33 @@ router.post('/rename',async (req,res)=>{
     const {newName} = req.body;
     console.log(name +"/-/"+newName);
     const respuesta =  funciones.cambiarNombre(name,newName);
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 router.post('/delete',async (req,res)=>{
     const {name} = req.body;
     console.log(name);
     const respuesta =  funciones.borrarArchivo(name,newName);
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 router.post('/copy',async (req,res)=>{
     const {name} = req.body;
     console.log(name);
     const respuesta =  funciones.copiarArchivo(name);
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 router.post('/cut',async (req,res)=>{
     const {name} = req.body;
     console.log(name);
     const respuesta =  funciones.copiarArchivo(name,true);
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 router.post('/paste',async (req,res)=>{
     const respuesta =  funciones.pegarArchivo();
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 router.post('/chmod',async (req,res)=>{
@@ -79,7 +79,7 @@ router.post('/chmod',async (req,res)=>{
     const {permissions} = req.body;
     console.log(name +"/-/"+permissions);
     const respuesta =  funciones.cambiarPermisos(name,permissions);
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 router.post('/chown',async (req,res)=>{
@@ -87,7 +87,7 @@ router.post('/chown',async (req,res)=>{
     const {newOwner} = req.body;
     console.log(name +"/-/"+newOwner);
     const respuesta =  funciones.cambiarPropitario(name,newOwner);
-    res.redirect('/');
+    res.json({'response':'success'});
 });
 
 module.exports = router;
