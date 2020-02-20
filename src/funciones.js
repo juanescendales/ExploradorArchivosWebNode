@@ -83,11 +83,8 @@ function permisoBinarioAOctal(permisoBinario){
     arrayBinario = permisoBinario.split("");
     permisosOctal = "";
     var user = arrayBinario.slice(0,3).join("");
-    console.log(user);
     var grupo = arrayBinario.slice(3,6).join("");
-    console.log(grupo);
     var others = arrayBinario.slice(6,9).join("");
-    console.log(others);
     permisosOctal += parseInt(parseInt(user),2).toString();
     permisosOctal += parseInt(parseInt(grupo),2).toString();
     permisosOctal += parseInt(parseInt(others),2).toString();
@@ -99,6 +96,7 @@ function mostrarContenido (){
         var permisos = execSync("ls -l | awk '{print $1}'", { cwd: funciones.pathDefault }).toString().split("\n");
         var propietarios = execSync("ls -l | awk '{print $3}'", { cwd: funciones.pathDefault }).toString().split("\n");
         var nombres = execSync("ls | sed ''", { cwd: funciones.pathDefault }).toString().split("\n");
+        var usuarioActual = execSync("whoami",{ cwd: funciones.pathDefault }).toString();
         permisos = permisos.slice(1,permisos.length-1);
         propietarios = propietarios.slice(1,propietarios.length-1);
         nombres = nombres.slice(0,nombres.length-1);
@@ -111,7 +109,7 @@ function mostrarContenido (){
                 tipo: funciones.tipoPermisos(permisos[i])
             });
         }
-        var response ={ 'general_id': 1, 'directorio': lista , 'consulta': funciones.consulta};
+        var response ={ 'general_id': 1, 'directorio': lista , 'consulta': funciones.consulta, 'actualUser':usuarioActual};
         funciones.consulta = {'id':-1,'mensaje':'None'};
         return response;
         
@@ -120,6 +118,7 @@ function mostrarContenido (){
         var permisos = execSync("ls -l | awk '{print $1}'", { cwd: funciones.pathDefault }).toString().split("\n");
         var propietarios = execSync("ls -l | awk '{print $3}'", { cwd: funciones.pathDefault }).toString().split("\n");
         var nombres = execSync("ls | sed ''", { cwd: funciones.pathDefault }).toString().split("\n");
+        var usuarioActual = execSync("whoami",{ cwd: funciones.pathDefault }).toString();
         permisos = permisos.slice(1,permisos.length-1);
         propietarios = propietarios.slice(1,propietarios.length-1);
         nombres = nombres.slice(0,nombres.length-1);
@@ -132,7 +131,7 @@ function mostrarContenido (){
                 tipo: funciones.tipoPermisos(permisos[i])
             });
         }
-        var response ={ 'general_id': 0, 'directorio': lista , 'consulta': funciones.consulta};  //general id 0  = no tiene permisos para entrar
+        var response ={ 'general_id': 0, 'directorio': lista , 'consulta': funciones.consulta,'actualUser':usuarioActual};  //general id 0  = no tiene permisos para entrar
         funciones.consulta = {'id':-1,'mensaje':'None'};
         return response;
     }
